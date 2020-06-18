@@ -13,7 +13,7 @@ public class Controladora{
         usuarios.add(ad);
         productos = new ArrayList<Producto>();
         BigDecimal po = new BigDecimal(258.50);
-        Producto p = new Producto(1,"Prueba","CAnsado",po);
+        Producto p = new Producto(1,"Prueba",2,po);
         productos.add(p);
         ventas = new ArrayList<VentasProductos>();
 
@@ -57,22 +57,23 @@ public class Controladora{
         this.ventas = ventas;
     }
 
-    public boolean crearUsuario(String nombre, String usuario, String password){
+    public void crearUsuario(Usuario usuario){
+        this.usuarios.add(usuario);
+    }
+    public boolean verificarUsuario(String usuario, String password){
         boolean aux = false;
-        int a = this.usuarios.size();
-        Usuario us = new Usuario(usuario,nombre,password);
-        this.usuarios.add(us);
-        if(this.usuarios.size()>a){
-            aux = true;
+        for (Usuario u:usuarios) {
+            if(u.getUsuario().equals(usuario) && u.getPassword().equals(password)){
+                aux = true;
+            }
         }
         return aux;
     }
-
     public void creaProducto(Producto producto){
        this.productos.add(producto);
     }
     public void borraProducto(Producto producto){
-        this.productos.del(producto);
+        this.productos.remove(producto);
 
     }
 }

@@ -257,6 +257,7 @@ $(document).ready(function(){
 	});
 });
 </script>
+
 </head>
 <body>
     <div class="container">
@@ -268,11 +269,12 @@ $(document).ready(function(){
 					</div>
 					<div class="col-sm-6">
 						<a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Añadir nuevos productos</span></a>
-						<a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Borrar</span></a>
+						<a id="buttondel" href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Borrar</span></a>
+						<a id="back" href="/" class="btn btn-link" data-toggle="modal"><i class="material-icons">home</i> <span></span></a>
 					</div>
                 </div>
             </div>
-            <table class="table table-striped table-hover">
+            <table id = tabla class="table table-striped table-hover">
                 <thead>
                     <tr>
 						<th>
@@ -283,7 +285,7 @@ $(document).ready(function(){
 						</th>
                         <th>ID</th>
                         <th>Nombre</th>
-						<th>Descripción</th>
+						<th>Cantidad</th>
                         <th>Precio</th>
                         <th>Acciones</th>
                     </tr>
@@ -298,10 +300,10 @@ $(document).ready(function(){
 						</td>
 						<td th:text=${producto.id}>ID</td>
                         <td th:text=${producto.nombre}>Nombre</td>
-						<td th:text=${producto.descripcion}>Descripcion</td>
+						<td th:text=${producto.cantidad}>Cantidad</td>
 						<td th:text=${producto.precio}>Precio</td>
                         <td>
-                            <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+                            <a  href="#editEmployeeModal" class="edit"  data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
                             <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
                         </td>
                     </tr>
@@ -331,8 +333,8 @@ $(document).ready(function(){
 							<input name="nombre" type="text" class="form-control" required>
 						</div>
 						<div class="form-group">
-							<label>Descripcion</label>
-							<textarea name="descripcion" class="form-control" required></textarea>
+							<label>Cantidad</label>
+							<input type = "number" name="descripcion" class="form-control" required></input>
 						</div>
 						<div class="form-group">
 							<label>Precio</label>
@@ -358,19 +360,19 @@ $(document).ready(function(){
 					</div>
 					<div class="modal-body">					
 						<div class="form-group">
-							<label>Name</label>
+							<label>ID</label>
 							<input type="text" class="form-control" required>
 						</div>
 						<div class="form-group">
-							<label>Email</label>
-							<input type="email" class="form-control" required>
+							<label>Nombre</label>
+							<input type="text" class="form-control" required>
 						</div>
 						<div class="form-group">
-							<label>Address</label>
-							<textarea class="form-control" required></textarea>
+							<label>Cantidad</label>
+							<input type="number" class="form-control" required></input>
 						</div>
 						<div class="form-group">
-							<label>Phone</label>
+							<label>Precio</label>
 							<input type="text" class="form-control" required>
 						</div>					
 					</div>
@@ -383,7 +385,7 @@ $(document).ready(function(){
 		</div>
 	</div>
 	<!-- Delete Modal HTML -->
-	<div id="deleteEmployeeModal" class="modal fade">
+	<div id="deleteEmployeeModal" class="modal fade"  method="DELETE">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<form>
