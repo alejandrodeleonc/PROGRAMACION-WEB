@@ -7,6 +7,7 @@ public class Controladora{
     private ArrayList<Producto> productos;
     private ArrayList<VentasProductos> ventas;
 
+
     public Controladora() {
         usuarios = new ArrayList<Usuario>();
         Usuario ad = new Usuario("admin","Administrator","admin");
@@ -17,6 +18,7 @@ public class Controladora{
         productos.add(p);
         ventas = new ArrayList<VentasProductos>();
 
+
     }
     public static Controladora getInstance() {
         if (controladora == null) {
@@ -24,6 +26,7 @@ public class Controladora{
         }
         return controladora;
     }
+
 
     public static Controladora getControladora() {
         return controladora;
@@ -70,11 +73,21 @@ public class Controladora{
         return aux;
     }
     public void creaProducto(Producto producto){
-       this.productos.add(producto);
+        productos.add(producto);
+    }
+    public Producto buscaProductobyid (int id){
+        return(productos.stream().filter(e -> e.getId() == id).findFirst().orElse(null));
+    }
+    public Producto editarProducto(Producto producto){
+        Producto tmp = buscaProductobyid(producto.getId());
+        if(tmp != null){
+            tmp.mezclar(producto);
+        }
+
+        return tmp;
     }
     public void borraProducto(Producto producto){
         this.productos.remove(producto);
-
     }
 }
 

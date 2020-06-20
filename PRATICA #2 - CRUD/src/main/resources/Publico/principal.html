@@ -12,7 +12,16 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 <style>
+   .material-icons carrito{
+        font-size: 30px;
+        padding: 13px;
+    }
 
+    .badge badge-info{
+    top: 0px;
+    left: 20px;
+    padding: 2px;
+    }
 
 </style>
 <body>
@@ -26,8 +35,9 @@
             <li class="active"><a href="#">Ver productos</a></li>
             <li><a href="">Comprar</a></li>
             <li><a href="#">Ventas Realizadas</a></li>
-            <li><a href="/Carrito">Administrar productos</a></li>
-            <li><a href="#">Carrito</a></li>
+            <li><a href="/admprod">Administrar productos</a></li>
+            <li name = cantidad><a href="#"><i class="material-icons carrito" data-toggle="tooltip" title="Edit">shopping_cart</i><span class="badge badge-info" th:text="${cantidad}"></span></li></a>
+
         </ul>
     </div>
 </nav>
@@ -49,9 +59,9 @@
             <td th:text=${producto.nombre}>Nombre</td>
             <td th:text=${producto.cantidad}>Cantidad en stock</td>
             <td th:text=${producto.precio}>Precio</td>
-            <td style="text-align: right"><input type="number" style="width:50px" required></input></td>
+            <td style="text-align: right"><input name="cantidad" type="number" style="width:50px" required></input></td>
             <td>
-            <a  href="" class="edit"  data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">add_shopping_cart</i></a>
+            <a  href="/agregarcar" class="edit"  data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">add_shopping_cart</i></a>
             </td>
         </tbody>
     </table>

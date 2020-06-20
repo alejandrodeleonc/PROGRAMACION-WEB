@@ -44,4 +44,10 @@ public class Producto {
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
     }
+    public void mezclar(Producto p){
+        this.id = p.getId();
+        this.nombre = p.getNombre();
+        this.cantidad = p.getCantidad();
+        this.precio = p.getPrecio();
+    }
 }

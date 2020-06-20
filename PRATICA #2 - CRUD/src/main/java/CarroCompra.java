@@ -2,19 +2,19 @@ import java.util.ArrayList;
 
 
 public class CarroCompra {
-    private long id;
+    private String id;
     private ArrayList<Producto> listaProductos;
 
-    public CarroCompra(long id, ArrayList<Producto> listaProductos) {
+    public CarroCompra(String id) {
         this.id = id;
-        this.listaProductos = listaProductos;
+        this.listaProductos = new ArrayList<Producto>();
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -22,7 +22,7 @@ public class CarroCompra {
         return listaProductos;
     }
 
-    public void setListaProductos(ArrayList<Producto> listaProductos) {
-        this.listaProductos = listaProductos;
+    public void setListaProductos(Producto producto) {
+        this.listaProductos.add(producto);
     }
 }
