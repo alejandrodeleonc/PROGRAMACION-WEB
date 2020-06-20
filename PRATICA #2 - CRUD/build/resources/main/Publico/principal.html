@@ -17,6 +17,7 @@
         padding: 13px;
     }
 
+
     .badge badge-info{
     top: 0px;
     left: 20px;
@@ -29,15 +30,14 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">WebSiteName</a>
+            <a class="navbar-brand" href="/">TIENDA PUCMM </a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Ver productos</a></li>
-            <li><a href="">Comprar</a></li>
-            <li><a href="#">Ventas Realizadas</a></li>
+            <li class="active"><a href="/">Ver Productos</a></li>
+            <li><a href="/verventas">Ventas Realizadas</a></li>
             <li><a href="/admprod">Administrar productos</a></li>
-            <li name = cantidad><a href="#"><i class="material-icons carrito" data-toggle="tooltip" title="Edit">shopping_cart</i><span class="badge badge-info" th:text="${cantidad}"></span></li></a>
-
+            <li name = cantidad><a href="/carrito"><i class="material-icons carrito" data-toggle="tooltip" title="Edit">shopping_cart</i><span class="badge badge-info" th:text="${cantidad}"></span></li></a>
+            <li name = cantidad><a href="/login"><i class="material-icons carrito" data-toggle="tooltip" title="Edit">account_circle</i></a>
         </ul>
     </div>
 </nav>
@@ -55,14 +55,16 @@
         </thead>
         <tbody>
         <tr th:each="producto : ${lista}">
-            <td th:text=${producto.id}>ID</td>
+            <form action="/agregarcar" method="post">
+             <td><input style="width:60px" type="text" name="id" readonly th:value="''+${producto.id}"></td>
             <td th:text=${producto.nombre}>Nombre</td>
             <td th:text=${producto.cantidad}>Cantidad en stock</td>
             <td th:text=${producto.precio}>Precio</td>
-            <td style="text-align: right"><input name="cantidad" type="number" style="width:50px" required></input></td>
+            <td style="text-align: right" ><input  id="cantidad" name="cantidad" type="number" min="0" style="width:50px" required></td>
             <td>
-            <a  href="/agregarcar" class="edit"  data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">add_shopping_cart</i></a>
+                <button type="submit" class="btn btn-primary"/><i type="submit" class="material-icons" data-toggle="tooltip" title="Edit">add_shopping_cart</i></button>
             </td>
+            </form>
         </tbody>
     </table>
 </div>

@@ -89,5 +89,15 @@ public class Controladora{
     public void borraProducto(Producto producto){
         this.productos.remove(producto);
     }
+    public Usuario buscarUsuariobyUser(String user){
+        Usuario aux = null;
+        for(Usuario u :usuarios){
+            if(user.equals(u.getUsuario())){
+                aux = u;
+            }
+        }
+
+        return aux;
+    }
 }
 

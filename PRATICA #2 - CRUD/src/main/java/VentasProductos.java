@@ -2,23 +2,23 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class VentasProductos {
-    private long id;
+    private String id;
     private Date fechaCompra;
     private String nombreCliente;
     private ArrayList<Producto> listaProductos;
 
-    public VentasProductos(long id, Date fechaCompra, String nombreCliente, ArrayList<Producto> listaProductos) {
+    public VentasProductos(String id, Date fechaCompra, String nombreCliente, ArrayList<Producto> listaProductos) {
         this.id = id;
         this.fechaCompra = fechaCompra;
         this.nombreCliente = nombreCliente;
         this.listaProductos = listaProductos;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

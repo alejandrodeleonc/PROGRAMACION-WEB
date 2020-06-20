@@ -2,10 +2,7 @@ import io.javalin.Javalin;
 import io.javalin.core.util.RouteOverviewPlugin;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class main {
@@ -14,6 +11,7 @@ public class main {
         ArrayList<Producto> prueba = control.getProductos();
         CarroCompra carroCompra = new CarroCompra(null);
         AtomicBoolean status = new AtomicBoolean(false);
+
 
 
 
@@ -30,13 +28,7 @@ public class main {
                 List<Producto> lista = Controladora.getInstance().getProductos();
                 //
                 Map<String, Object> modelo = new HashMap<>();
-                int aux = 0;
-                if(carroCompra.getId()!=null){
-                    for (Producto p: carroCompra.getListaProductos()) {
-                        aux+=p.getCantidad();
-                    }
-                }
-
+                int aux = carroCompra.getListaProductos().size();
                 modelo.put("cantidad",aux);
                 modelo.put("titulo", "Listado de productos");
                 modelo.put("lista", lista);
@@ -212,12 +204,56 @@ public class main {
             });
 
             /*CONTROLANDO LOS ITEMS ANADIDOS AL CARRITO DE UN USUARIO PARTICULAR*/
-            app.get("/agregarcar", ctx -> {
-                BigDecimal p = new BigDecimal(581.5);
+            app.post("/agregarcar", ctx -> {
+                Map<String, Object> modelo = new HashMap<>();
+
+                Producto producto = control.buscaProductobyid(ctx.formParam("id", Integer.class).get());
+                //int cant = 2;
                 int cantidad = ctx.formParam("cantidad", Integer.class).get();
-                Producto m = new Producto(5,"Juan",cantidad,p);
-                carroCompra.setListaProductos(m);
+                print(""+cantidad);
+                for(int i =0; i<cantidad; i++){
+                    carroCompra.setListaProductos(producto);
+                }
                 ctx.redirect("/");
+
+            });
+            /*CONTROLANDO EL ACCESO AL CARRITO*/
+            app.before("/carrito", ctx -> {
+                print("Entro a verificar");
+                if(ctx.sessionAttribute("user")==null) {
+                    print("No usuario");
+                    ctx.redirect("/login.html");
+                }
+            });
+
+            app.get("/carrito", ctx -> {
+                //tomando el parametro utl y validando el tipo.
+                List<Producto> lista = carroCompra.getListaProductos();
+                String u = ctx.sessionAttribute("user").toString();
+                Usuario user = control.buscarUsuariobyUser(u);
+                //
+                Map<String, Object> modelo = new HashMap<>();
+                int aux = carroCompra.getListaProductos().size();
+                modelo.put("cantidad",aux);
+                modelo.put("titulo", "Carro de compras");
+                modelo.put("nombrecliente", user.getNombre());
+                modelo.put("lista", lista);
+                //enviando al sistema de plantilla.
+                ctx.render("Publico/carro.html", modelo);
+            });
+
+            app.get("/vender", ctx ->{
+                String id = ctx.req.getSession().getId();
+                Date fechacompra = new Date();
+                String u = ctx.sessionAttribute("user").toString();
+                Usuario user = control.buscarUsuariobyUser(u);
+                if(user!=null){
+                    VentasProductos venta = new VentasProductos(id,fechacompra,user.getNombre(),carroCompra.getListaProductos());
+                    carroCompra.getListaProductos().clear();
+                }
+
+                ctx.redirect("/carrito");
+
             });
 
 

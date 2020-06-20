@@ -31,14 +31,14 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">WebSiteName</a>
+            <a class="navbar-brand" href="/">TIENDA PUCMM </a>
         </div>
         <ul class="nav navbar-nav">
-            <li ><a href="#">Ver productos</a></li>
-            <li><a href="">Comprar</a></li>
-            <li><a href="#">Ventas Realizadas</a></li>
-            <li class="active"><a href="/Carrito">Administrar productos</a></li>
-            <li name = cantidad><a href="#"><i class="material-icons carrito" data-toggle="tooltip" title="Edit">shopping_cart</i><span class="badge badge-info" th:text="${cantidad}"></span></li></a>
+            <li><a href="/">Ver Productos</a></li>
+            <li><a href="/verventas">Ventas Realizadas</a></li>
+            <li class="active"><a href="/admprod">Administrar productos</a></li>
+            <li name = cantidad><a href="/carrito"><i class="material-icons carrito" data-toggle="tooltip" title="Edit">shopping_cart</i><span class="badge badge-info" th:text="${cantidad}"></span></li></a>
+            <li name = cantidad><a href="/login"><i class="material-icons carrito" data-toggle="tooltip" title="Edit">account_circle</i></a>
 
         </ul>
     </div>
@@ -64,7 +64,7 @@
                 <td th:text=${producto.cantidad}>Cantidad en stock</td>
                 <td th:text=${producto.precio}>Precio</td>
                 <td style="text-align: right">
-                    <a   th:href="'eliminar/'+${producto.id}" data-toggle="modal"><i class="material-icons delete" data-toggle="tooltip" title="Edit">delete_forever</i></a>
+                    <a   th:href="'/eliminar/'+${producto.id}" data-toggle="modal"><i class="material-icons delete" data-toggle="tooltip" title="Edit">delete_forever</i></a>
                 </td>
                 <td>
                     <a   th:href="'editar/'+${producto.id}"  data-toggle="modal"><i class="material-icons edit" data-toggle="tooltip" title="Edit">edit</i></a>
