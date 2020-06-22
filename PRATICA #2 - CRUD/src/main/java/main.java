@@ -66,6 +66,7 @@ public class main {
                 String usuario = ctx.formParam("user");
                 String contrasena = ctx.formParam("password");
                 ctx.sessionAttribute("user",usuario);
+                print("Usuario: "+ usuario);
                 String id = ctx.req.getSession().getId();
                 carroCompra.setId(id);
 
@@ -231,15 +232,27 @@ public class main {
                 List<Producto> lista = carroCompra.getListaProductos();
                 String u = ctx.sessionAttribute("user").toString();
                 Usuario user = control.buscarUsuariobyUser(u);
-                //
+                BigDecimal total = new BigDecimal(0);
+                for(Producto p : lista ){
+                    total = total.add(p.getPrecio());
+                }
                 Map<String, Object> modelo = new HashMap<>();
                 int aux = carroCompra.getListaProductos().size();
                 modelo.put("cantidad",aux);
                 modelo.put("titulo", "Carro de compras");
                 modelo.put("nombrecliente", user.getNombre());
+                modelo.put("total", total);
                 modelo.put("lista", lista);
                 //enviando al sistema de plantilla.
                 ctx.render("Publico/carro.html", modelo);
+            });
+
+            app.get("/eliminaritemcarro/:id", ctx -> {
+                Map<String, Object> modelo = new HashMap<>();
+                Producto producto = control.buscaProductobyid(ctx.pathParam("id", Integer.class).get());
+                carroCompra.getListaProductos().remove(producto);
+                ctx.redirect("/carrito");
+
             });
 
             app.get("/vender", ctx ->{
@@ -248,7 +261,14 @@ public class main {
                 String u = ctx.sessionAttribute("user").toString();
                 Usuario user = control.buscarUsuariobyUser(u);
                 if(user!=null){
-                    VentasProductos venta = new VentasProductos(id,fechacompra,user.getNombre(),carroCompra.getListaProductos());
+                    BigDecimal total = new BigDecimal(0);
+                    for(Producto p : carroCompra.getListaProductos()){
+                        total = total.add(p.getPrecio());
+                    }
+                    VentasProductos venta = new VentasProductos(id,fechacompra,user.getNombre(),carroCompra.getListaProductos(),total.floatValue());
+
+                    control.setVentas(venta);
+                    print("Cantidad de ventas: "+control.getVentas().size());
                     carroCompra.getListaProductos().clear();
                 }
 
@@ -256,6 +276,29 @@ public class main {
 
             });
 
+            /*MANEJA LA VISTA DE LAS VENTAS*/
+            app.before("/verventas", ctx -> {
+                print("Entro a verificar");
+                print("Ventas: "+ control.getVentas().size());
+                if(ctx.sessionAttribute("user")==null) {
+                    print("No usuario");
+                    ctx.redirect("/login.html");
+                }
+            });
+
+            app.get("/verventas", ctx -> {
+
+                Map<String, Object> modelo = new HashMap<>();
+
+                if(ctx.sessionAttribute("user").equals("admin")){
+                    List<VentasProductos> lista = control.getVentas();
+                    modelo.put("titulo", "Historial de ventas");
+                    modelo.put("lista", lista);
+                    ctx.render("Publico/verventas.html", modelo);
+            }else{
+                    ctx.result("No tienes permiso para acceder a esta pagina");
+                }
+            });
 
 
     }

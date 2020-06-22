@@ -6,12 +6,16 @@ public class VentasProductos {
     private Date fechaCompra;
     private String nombreCliente;
     private ArrayList<Producto> listaProductos;
+    private float  total;
 
-    public VentasProductos(String id, Date fechaCompra, String nombreCliente, ArrayList<Producto> listaProductos) {
+
+
+    public VentasProductos(String id, Date fechaCompra, String nombreCliente, ArrayList<Producto> listaProductos, float total) {
         this.id = id;
         this.fechaCompra = fechaCompra;
         this.nombreCliente = nombreCliente;
         this.listaProductos = listaProductos;
+        this.total = total;
     }
 
     public String getId() {
@@ -44,5 +48,12 @@ public class VentasProductos {
 
     public void setListaProductos(ArrayList<Producto> listaProductos) {
         this.listaProductos = listaProductos;
+    }
+    public float getTotal() {
+        return total;
+    }
+
+    public void setTotal(float total) {
+        this.total = total;
     }
 }

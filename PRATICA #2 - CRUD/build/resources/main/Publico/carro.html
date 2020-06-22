@@ -62,11 +62,12 @@
                 <td th:text=${producto.cantidad}>Cantidad en stock</td>
                 <td th:text=${producto.precio}>Precio</td>
                 <td style="text-align: right">
-                    <a   th:href="'/eliminar/'+${producto.id}" data-toggle="modal"><i class="material-icons delete" data-toggle="tooltip" title="Edit">delete_forever</i></a>
+                    <a   th:href="'/eliminaritemcarro/'+${producto.id}" data-toggle="modal"><i class="material-icons delete" data-toggle="tooltip" title="Edit">delete_forever</i></a>
                 </td>
             </form>
         </tbody>
     </table>
+    <h4 style="text-align:right" >Total de lac compra: <b th:text=${total}></b></h4>
     <a href="/vender"><i class="material-icons delete"  style="font-size:50px;" data-toggle="tooltip" title="Edit">payment</i></a>
 </div>
 

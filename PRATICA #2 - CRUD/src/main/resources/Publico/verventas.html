@@ -42,30 +42,30 @@
 </nav>
 
 <div class="container">
-    <h3><b>Lista de productos</b></h3>
+    <h3><b>Lista de ventas</b></h3>
+    <div th:each="venta : ${lista}">
+        <h4 class="text-center" th:text="${venta.nombreCliente}+' - '+${venta.fechaCompra}">Cliente - Fecha</h4>
     <table id = tabla class="table table-striped table-hover">
         <thead>
         <tr>
             <th>ID</th>
             <th>Nombre</th>
-            <th>Cantidad en stock</th>
             <th>Precio</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="producto : ${lista}">
-            <form action="/agregarcar" method="post">
+        <tr th:each="producto : ${venta.listaProductos}">
+            <form>
                 <td><input style="width:60px" type="text" name="id" readonly th:value="''+${producto.id}"></td>
                 <td th:text=${producto.nombre}>Nombre</td>
-                <td th:text=${producto.cantidad}>Cantidad en stock</td>
                 <td th:text=${producto.precio}>Precio</td>
-                <td style="text-align: right" ><input  id="cantidad" name="cantidad" type="number" min="0" style="width:50px" required></td>
-                <td>
-                    <button type="submit" class="btn btn-primary"/><i type="submit" class="material-icons" data-toggle="tooltip" title="Edit">add_shopping_cart</i></button>
-                </td>
             </form>
         </tbody>
     </table>
+        <h3 class="text-center" th:text="'Total Compra: '+${venta.total}">Precio Total</h3>
+        <br/>
+
+    </div>
 </div>
 
 </body>

@@ -56,8 +56,8 @@ public class Controladora{
         return ventas;
     }
 
-    public void setVentas(ArrayList<VentasProductos> ventas) {
-        this.ventas = ventas;
+    public void setVentas(VentasProductos venta) {
+        this.ventas.add(venta);
     }
 
     public void crearUsuario(Usuario usuario){
