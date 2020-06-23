@@ -58,13 +58,12 @@
             <form>
                 <td><input style="width:60px" type="text" name="id" readonly th:value="''+${producto.id}"></td>
                 <td th:text=${producto.nombre}>Nombre</td>
-                <td th:text=${producto.cantidad}>Cantidad en stock</td>
                 <td th:text=${producto.precio}>Precio</td>
             </form>
         </tbody>
     </table>
         <h3 class="text-center" th:text="'Total Compra: '+${venta.total}">Precio Total</h3>
-        <br />
+        <br/>
 
     </div>
 </div>

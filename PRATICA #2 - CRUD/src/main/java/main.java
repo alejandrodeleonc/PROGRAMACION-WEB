@@ -261,11 +261,14 @@ public class main {
                 String u = ctx.sessionAttribute("user").toString();
                 Usuario user = control.buscarUsuariobyUser(u);
                 if(user!=null){
+                    ArrayList<Producto> tmp = new ArrayList<>();
+
                     BigDecimal total = new BigDecimal(0);
                     for(Producto p : carroCompra.getListaProductos()){
+                        tmp.add(p);
                         total = total.add(p.getPrecio());
                     }
-                    VentasProductos venta = new VentasProductos(id,fechacompra,user.getNombre(),carroCompra.getListaProductos(),total.floatValue());
+                    VentasProductos venta = new VentasProductos(id,fechacompra,user.getNombre(),tmp,total.floatValue());
 
                     control.setVentas(venta);
                     print("Cantidad de ventas: "+control.getVentas().size());
