@@ -2,18 +2,27 @@ import io.javalin.Javalin;
 import io.javalin.core.util.RouteOverviewPlugin;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Controladora control = Controladora.getInstance();
         ArrayList<Producto> prueba = control.getProductos();
         CarroCompra carroCompra = new CarroCompra(null);
         AtomicBoolean status = new AtomicBoolean(false);
-
-
-
+        BDServices servicios = new BDServices();
+        ControladorBD bd = ControladorBD.getInstancia();
+        bd.startDb();
+        bd.testConexion();
+        bd.crearTablas();
+        if(!servicios.existeUsuario("admin")){
+            servicios.crearUsuario(new Usuario("admin", "Administrador", "admin"));
+        }
+        control.setUsuarios(servicios.cargarUsuarios());
+        control.setProductos(servicios.cargarProductos());
+        control.setVentas(servicios.cargarVentas());
 
         Javalin app = Javalin.create(config ->{
             config.addStaticFiles("/Publico"); //desde la carpeta de resources
@@ -65,11 +74,12 @@ public class main {
                 print("Entro a verificar el login");
                 String usuario = ctx.formParam("user");
                 String contrasena = ctx.formParam("password");
+                //print("Usuario: "+ usuario);
+                ctx.req.getSession().invalidate();
                 ctx.sessionAttribute("user",usuario);
-                print("Usuario: "+ usuario);
                 String id = ctx.req.getSession().getId();
                 carroCompra.setId(id);
-
+                print(servicios.getUsuariobyUser(usuario).getNombre());
                 print(carroCompra.getId());
                 ctx.redirect("/");
 
@@ -86,11 +96,18 @@ public class main {
                 String nombre = ctx.formParam("nombre");
                 String user = ctx.formParam("usuario");
                 String password = ctx.formParam("contrasena");
-                Usuario tmp = new Usuario(user,nombre,password);
-                control.crearUsuario(tmp);
-                print("Se creo usuario");
-                print(""+control.getUsuarios().size());
-                ctx.redirect("/login.html");
+                if(!servicios.existeUsuario(user)){
+                    Usuario tmp = new Usuario(user,nombre,password);
+                    servicios.crearUsuario(tmp);
+                    control.setUsuarios(servicios.cargarUsuarios());
+                    print("Se creo usuario");
+                    print(""+control.getUsuarios().size());
+                    ctx.redirect("/login.html");
+                }else{
+                    Map<String, Object> modelo = new HashMap<>();
+                    modelo.put("error", "ERROR: YA EXISTE UN PRODUCTO CON ESE ID");
+                    ctx.render("Publico/nuevousuario.html", modelo);
+                }
 
             });
 
@@ -151,7 +168,8 @@ public class main {
 
                 }else{
                     Producto prod = new Producto(id,nombre,cantidad,precio);
-                    control.creaProducto(prod);
+                    servicios.crearProducto(prod);
+                    control.setProductos(servicios.cargarProductos());
                     modelo.put("titulo", "Crear nuevo producto");
                     modelo.put("boton", "Crear");
                     modelo.put("error", "");
@@ -184,13 +202,15 @@ public class main {
                 BigDecimal precio = new BigDecimal(auxprecio);
                 Producto tmp = new Producto(id,nombre,cantidad,precio);
 
-                if(control.editarProducto(tmp) == null){
+                if(control.buscaProductobyid(id) == null){
                     modelo.put("error","Error: Producto no encontrado");
                     modelo.put("accion", "/editar");
                     modelo.put("titulo", "Editar producto");
                     modelo.put("boton", "Editar");
                     ctx.render("Publico/editarcrearprod.html", modelo);
                 }else{
+                    servicios.actualizarProducto(tmp);
+                    control.setProductos(servicios.cargarProductos());
                     ctx.redirect("/admprod");
                 }
 
@@ -198,8 +218,12 @@ public class main {
 
             app.get("/eliminar/:id", ctx-> {
                 Map<String, Object> modelo = new HashMap<>();
-                Producto producto = control.buscaProductobyid(ctx.pathParam("id", Integer.class).get());
-                control.borraProducto(producto);
+                if(servicios.borrarProducto(ctx.pathParam("id", Integer.class).get())){
+                    print("Eliminado");
+                    control.setProductos(servicios.cargarProductos());
+                }else{
+                    print("Hay problemas");
+                }
                 ctx.redirect("/admprod");
 
             });
@@ -269,8 +293,11 @@ public class main {
                         total = total.add(p.getPrecio());
                     }
                     VentasProductos venta = new VentasProductos(id,fechacompra,user.getNombre(),tmp,total.floatValue());
-                    control.setVentas(venta);
-                    print("Cantidad de ventas: "+control.getVentas().size());
+                    if(servicios.crearVenta(venta)){
+                        print("Se creo");
+                    }
+                    print("Cargar ventas: "+servicios.cargarVentas().size());
+                    control.setVentas(servicios.cargarVentas());
                     carroCompra.getListaProductos().clear();
                 }
 
@@ -280,8 +307,7 @@ public class main {
 
             /*MANEJA LA VISTA DE LAS VENTAS*/
             app.before("/verventas", ctx -> {
-                print("Entro a verificar");
-                print("Ventas: "+ control.getVentas().size());
+
                 if(ctx.sessionAttribute("user")==null) {
                     print("No usuario");
                     ctx.redirect("/login.html");
@@ -304,10 +330,13 @@ public class main {
 
 
     }
+
         public static void print (String string){
 
             System.out.println(string);
         }
+
+
 
 }
 
