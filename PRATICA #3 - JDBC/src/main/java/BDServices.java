@@ -247,8 +247,8 @@ public class BDServices {
         Connection con = null;
         try {
 
-            String query = "insert into VENTA(ID,CLIENT_NAME, FECHA, TOTAL) values(?,?,?,?)";
-            String queryaux = "insert into PRODUCTOVENDIDOS(IDSELL, IDPRODUCT ) values(?,?)";
+            String query = "INSERT INTO VENTA(ID,CLIENT_NAME, FECHA, TOTAL) values(?,?,?,?)";
+            String queryaux = "INSERT INTO PRODUCTOVENDIDOS(IDSELL, IDPRODUCT ) values(?,?)";
             con = ControladorBD.getInstancia().getConexion();
             //
             PreparedStatement prepareStatement = con.prepareStatement(query);
@@ -258,15 +258,10 @@ public class BDServices {
             prepareStatement.setString(2, venta.getNombreCliente());
             prepareStatement.setString(3,venta.getFechaCompra().toString());
             prepareStatement.setFloat(4,venta.getTotal());
-
-            PreparedStatement prep = con.prepareStatement(queryaux);
-            for(Producto producto:venta.getListaProductos()){
-                prep.setString(1,id);
-                prep.setInt(2,producto.getId());
+            if(!insertarProductosVendidos(venta.getListaProductos(),id)){
+                System.out.println("Error al insertar produtos\n");
             }
 
-            //
-            prep.executeUpdate();
             int fila = prepareStatement.executeUpdate();
             System.out.println("Creo ventas: "+ fila);
             ok = fila > 0 ;
@@ -283,11 +278,44 @@ public class BDServices {
 
         return ok;
     }
+    public boolean insertarProductosVendidos(ArrayList<Producto> productos, String ID){
+        boolean ok = false;
+        Connection con = null;
+        try {
+
+            String query = "INSERT INTO PRODUCTOVENDIDOS(IDSELL, IDPRODUCT ) values(?,?)";
+            con = ControladorBD.getInstancia().getConexion();
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            System.out.println("Cantidad de productos en venta: "+ productos.size());
+            //Antes de ejecutar seteo los parametros.
+            int fila = 0;
+            for(Producto p : productos){
+                prepareStatement.setString(1,ID);
+                prepareStatement.setInt(2,p.getId());
+                fila = prepareStatement.executeUpdate();
+                ok = fila > 0 ;
+            }
+
+
+
+        } catch (SQLException ex) {
+            Logger.getLogger(BDServices.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(BDServices.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+
+        return ok;
+    }
 
 
     public ArrayList<VentasProductos> cargarVentas() throws SQLException {
         ArrayList<VentasProductos> lista = new ArrayList<VentasProductos>();
-        ArrayList<Producto> l = new ArrayList<Producto>();
         Connection con = null; //objeto conexion.
         try {
 
@@ -304,21 +332,12 @@ public class BDServices {
                 String nombreclient = rs.getString("CLIENT_NAME");
                 String total = rs.getString("TOTAL");
 
-                String queryprod = "SELECT * FROM PRODUCTOVENDIDOS";
-                PreparedStatement p = con.prepareStatement(queryprod);
-                ResultSet rsprod = p.executeQuery();
-
-                while(rsprod.next()){
-                    int y = rsprod.getInt("IDPRODUCT");
-                    Producto paux = Controladora.getInstance().buscaProductobyid(y);
-                    prods.add(paux);
-                }
                 DateFormat sfd = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
                 Date date = sfd.parse(String.valueOf(fecha));
-                l = prods;
-                VentasProductos venta = new VentasProductos(id, date, nombreclient, l, Float.valueOf(total));
+                prods = cargarProductosdeVendidos(id);
+                System.out.println("Cantidad de productos en la venta"+id + "es:"+prods.size());
+                VentasProductos venta = new VentasProductos(id, date, nombreclient, prods, Float.valueOf(total));
                 lista.add(venta);
-                prods.clear();
 
             }
 
@@ -335,5 +354,34 @@ public class BDServices {
         }
 
         return lista;
+    }
+
+    private ArrayList<Producto> cargarProductosdeVendidos(String IDVenta){
+        ArrayList<Producto> lista = new ArrayList<Producto>();
+        Connection con = null; //objeto conexion.
+        try {
+            //
+            String query = "SELECT * FROM PRODUCTOVENDIDOS WHERE IDSELL = ?";
+            con = ControladorBD.getInstancia().getConexion(); //referencia a la conexion.
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            prepareStatement.setString(1,IDVenta);
+            ResultSet rs = prepareStatement.executeQuery();
+            while(rs.next()){
+                Producto tmp = Controladora.getInstance().buscaProductobyid(rs.getInt("IDPRODUCT"));
+
+                lista.add(tmp);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(BDServices.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(BDServices.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return  lista;
     }
 }

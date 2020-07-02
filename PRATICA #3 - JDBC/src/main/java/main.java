@@ -1,10 +1,12 @@
 import io.javalin.Javalin;
 import io.javalin.core.util.RouteOverviewPlugin;
+import org.jasypt.util.text.BasicTextEncryptor;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 
 public class main {
     public static void main(String[] args) throws SQLException {
@@ -36,6 +38,20 @@ public class main {
                 //tomando el parametro utl y validando el tipo.
                 List<Producto> lista = Controladora.getInstance().getProductos();
                 //
+               if(ctx.cookie("usuarioGuardado")!=null){
+                   BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+                   textEncryptor.setPassword("clave");
+                   print(ctx.cookie("usuarioGuardado"));
+                   String myEncryptedText = ctx.cookie("usuarioGuardado");
+                   String plainText = textEncryptor.decrypt(myEncryptedText);
+                   print(plainText);
+
+                   if(ctx.sessionAttribute("user")== null){
+                       ctx.sessionAttribute("user",plainText);
+                   }
+
+               }
+
                 Map<String, Object> modelo = new HashMap<>();
                 int aux = carroCompra.getListaProductos().size();
                 modelo.put("cantidad",aux);
@@ -59,6 +75,8 @@ public class main {
 
                 if(!control.verificarUsuario(usuario, contrasena)){
                     ctx.redirect("login.html");
+                }else{
+                    ctx.removeCookie("usuarioGuardado", "/");
                 }
 
             });
@@ -75,6 +93,18 @@ public class main {
                 String usuario = ctx.formParam("user");
                 String contrasena = ctx.formParam("password");
                 //print("Usuario: "+ usuario);
+                if( ctx.formParam("recordar")!=null){
+                    BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+                    textEncryptor.setPassword("clave");
+                    String myEncryptedUser = textEncryptor.encrypt(usuario);
+                    /*BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+                    String encryptedPassword = passwordEncryptor.encryptPassword(contrasena);*/
+
+                    ctx.cookie("usuarioGuardado", myEncryptedUser, 604800);
+                    //ctx.cookie("contrasenaGuardado", encryptedPassword, 168);
+
+
+                }
                 ctx.req.getSession().invalidate();
                 ctx.sessionAttribute("user",usuario);
                 String id = ctx.req.getSession().getId();
