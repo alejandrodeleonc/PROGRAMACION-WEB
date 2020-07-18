@@ -17,10 +17,8 @@ public class BDServices {
 
     public boolean crearUsuario(Usuario user){
         boolean ok =false;
-
         Connection con = null;
         try {
-
             String query = "insert into USUARIO(NAME, USER, PASSWORD) values(?,?,?)";
             con = ControladorBD.getInstancia().getConexion();
             //
@@ -43,7 +41,6 @@ public class BDServices {
                 Logger.getLogger(BDServices.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
         return ok;
     }
 
