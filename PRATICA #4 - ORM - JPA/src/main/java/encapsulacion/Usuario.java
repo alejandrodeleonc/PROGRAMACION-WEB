@@ -1,17 +1,16 @@
 package encapsulacion;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.sun.istack.NotNull;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class Usuario {
+public class Usuario implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     private String usuario;
     private String nombre;
+    @NotNull
     private String password;
 
     public Usuario(){
@@ -22,11 +21,6 @@ public class Usuario {
         this.nombre = nombre;
         this.password = password;
     }
-
-    public int getId() {
-        return id;
-    }
-
 
     public String getUsuario() {
         return usuario;

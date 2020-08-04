@@ -50,24 +50,25 @@
         <tr>
             <th>ID</th>
             <th>Nombre</th>
-            <th>Cantidad en stock</th>
+            <th>Cantidad</th>
             <th>Precio</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="producto : ${lista}">
+        <tr th:each="ventaprod : ${lista}">
+
             <form>
-                <td><input style="width:60px" type="text" name="id" readonly th:value="''+${producto.id}"></td>
-                <td th:text=${producto.nombre}>Nombre</td>
-                <td th:text=${producto.cantidad}>Cantidad en stock</td>
-                <td th:text=${producto.precio}>Precio</td>
+                <td><input style="width:60px" type="text" name="id" readonly th:value="''+${ventaprod.producto.id}"></td>
+                <td th:text=${ventaprod.producto.nombre}>Nombre</td>
+                <td th:text=${ventaprod.cantidad}>Cantidad</td>
+                <td th:text=${ventaprod.producto.precio}>Precio</td>
                 <td style="text-align: right">
-                    <a   th:href="'/eliminaritemcarro/'+${producto.id}" data-toggle="modal"><i class="material-icons delete" data-toggle="tooltip" title="Edit">delete_forever</i></a>
+                    <a   th:href="'/eliminaritemcarro/'+${ventaprod.producto.id}" data-toggle="modal"><i class="material-icons delete" data-toggle="tooltip" title="Edit">delete_forever</i></a>
                 </td>
             </form>
         </tbody>
     </table>
-    <h4 style="text-align:right" >Total de lac compra: <b th:text=${total}></b></h4>
+    <h4 style="text-align:right" >Total de la compra: <b th:text=${total}></b></h4>
     <a href="/vender"><i class="material-icons delete"  style="font-size:50px;" data-toggle="tooltip" title="Edit">payment</i></a>
 </div>
 

@@ -1,5 +1,10 @@
 package servicios;
+import encapsulacion.Producto;
 import encapsulacion.ventaprod;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.util.List;
 
 
 public class ventaprodservices extends GestionDB<ventaprod> {
@@ -16,5 +21,10 @@ public class ventaprodservices extends GestionDB<ventaprod> {
         return instancia;
     }
 
-
+    public List<ventaprod> consultaNativa(){
+        EntityManager em = getEntityManager();
+        Query query = em.createNativeQuery("SELECT * FROM VENTPROD", Producto.class);
+        List<ventaprod> lista = query.getResultList();
+        return lista;
+    }
 }

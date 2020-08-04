@@ -15,6 +15,8 @@ public class main {
 
 
 
+
+
         Javalin app = Javalin.create(config ->{
             config.addStaticFiles("/Publico"); //desde la carpeta de resources
             config.registerPlugin(new RouteOverviewPlugin("/rutas")); //aplicando plugins de las rutas

@@ -50,15 +50,17 @@
         <tr>
             <th>ID</th>
             <th>Nombre</th>
+            <th>Cantidad</th>
             <th>Precio</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="producto : ${venta.listaProductos}">
+        <tr th:each="ventaprod : ${venta.listaProductos}">
             <form>
-                <td><input style="width:60px" type="text" name="id" readonly th:value="''+${producto.id}"></td>
-                <td th:text=${producto.nombre}>Nombre</td>
-                <td th:text=${producto.precio}>Precio</td>
+                <td><input style="width:60px" type="text" name="id" readonly th:value="''+${ventaprod.producto.id}"></td>
+                <td th:text=${ventaprod.producto.nombre}>Nombre</td>
+                <th th:text=${ventaprod.cantidad}>cantidad</th>
+                <td th:text=${ventaprod.producto.precio}>Precio</td>
             </form>
         </tbody>
     </table>

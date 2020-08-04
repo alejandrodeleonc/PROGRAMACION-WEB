@@ -1,21 +1,39 @@
 package encapsulacion;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import com.sun.istack.NotNull;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-public class Producto {
+public class Producto implements Serializable {
     @Id
+    @Column(name = "prod_id")
     private int id_prod;
+    @NotNull
     private String nombre;
     private int cantidad;
-    private BigDecimal precio;
 
-    public Producto(int id, String nombre, int cantidad, BigDecimal precio) {
+    @NotNull
+    private BigDecimal precio;
+    private String descripcion;
+
+    @OneToMany(mappedBy = "producto", fetch = FetchType.EAGER)
+    @Lob
+    private List<Foto> fotos = new ArrayList<>();
+
+
+    public Producto(){};
+
+    public Producto(int id, String nombre, int cantidad, BigDecimal precio, String descripcion) {
         this.id_prod = id;
         this.nombre = nombre;
         this.cantidad = cantidad;
         this.precio = precio;
+        this.descripcion = descripcion;
     }
 
     public int getId() {
@@ -46,13 +64,22 @@ public class Producto {
         return precio;
     }
 
+    public List<Foto> getFotos() {
+        return fotos;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setFotos(List<Foto> fotos) {
+        this.fotos = fotos;
+    }
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
-    }
-    public void mezclar(Producto p){
-        this.id_prod = p.getId();
-        this.nombre = p.getNombre();
-        this.cantidad = p.getCantidad();
-        this.precio = p.getPrecio();
     }
 }

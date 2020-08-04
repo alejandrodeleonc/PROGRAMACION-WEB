@@ -1,29 +1,34 @@
 package encapsulacion;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "VENTAS")
-public class VentasProductos {
+public class VentasProductos implements Serializable  {
     @Id
+    @NotNull
     private String id;
     private Date fechaCompra;
     private String nombreCliente;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "PRODUCTOSPORVENTA")
+
+    @OneToMany(fetch = FetchType.EAGER)
     private List<ventaprod> listaventaprod;
+
     private float  total;
 
 
+    public VentasProductos(){}
 
-    public VentasProductos(String id, Date fechaCompra, String nombreCliente, List<ventaprod> listaProductos, float total) {
+    public VentasProductos(String id, Date fechaCompra, String nombreCliente, List<ventaprod> listaventaprod, float total) {
         this.id = id;
         this.fechaCompra = fechaCompra;
         this.nombreCliente = nombreCliente;
-        this.listaventaprod = listaProductos;
+        this.listaventaprod = listaventaprod;
         this.total = total;
     }
 

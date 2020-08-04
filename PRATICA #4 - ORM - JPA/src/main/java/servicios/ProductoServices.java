@@ -27,9 +27,23 @@ public class ProductoServices extends GestionDB<Producto>{
     public List<Producto> consultaNativa(){
         EntityManager em = getEntityManager();
         Query query = em.createNativeQuery("SELECT * FROM PRODUCTO ", Producto.class);
-        //query.setParameter("nombre", apellido+"%");
         List<Producto> lista = query.getResultList();
         return lista;
+    }
+    public boolean verificarExisteId(int id){
+        boolean aux = false;
+        EntityManager em = getEntityManager();
+        Query query = em.createNativeQuery("SELECT * FROM PRODUCTO", Producto.class);
+        List<Producto> lista = query.getResultList();
+
+        for(Producto p : lista){
+            if(p.getId() == id){
+                aux = true;
+                break;
+            }
+        }
+
+        return aux;
     }
 
 }
