@@ -387,9 +387,6 @@ public class main {
             }else{
                 ctx.result("Solo puedes borrar un comentario tuyo, no de otra persona");
             }
-
-
-
         });
 
         /*MANEJA LA VISTA DE LAS VENTAS*/

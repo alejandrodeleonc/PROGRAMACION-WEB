@@ -50,3 +50,8 @@ run{
 task stage {
     dependsOn shadowJar
 }
+shadowJar{
+    baseName = 'app'
+    classifier = ''
+    archiveVersion = ''
+}
