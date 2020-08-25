@@ -1,0 +1,7 @@
+{
+  "/api/*":{
+    "target": "https://2p.simocapa.com.do",
+    "secure": false,
+    "logLevel": "debug"
+  }
+}

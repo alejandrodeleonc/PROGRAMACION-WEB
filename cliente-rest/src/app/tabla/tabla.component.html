@@ -1,0 +1,103 @@
+<!-- <p-table [value]="products"> -->
+<p-table [value]="encuestas">
+  <ng-template pTemplate="caption">
+    <div id="btn_title" class="p-d-flex p-ai-center p-jc-between">
+      <h1>Cliente rest - Observer de encuentas</h1>
+      <!-- <p-button class="btn_refres" icon="pi pi-arrow-down" style=""></p-button> -->
+      <p-menu #menu [popup]="true" [model]="items"></p-menu>
+      <div class="div">
+        <input [(ngModel)]="userNameSearch" id="find" placeholder="Inserte un usuario" />
+        <button type="button" pButton icon="pi pi-search" (click)="getData()"></button>
+      </div>
+      <button class="btn" type="button" pButton icon="pi pi-bars" label="" (click)="menu.toggle($event)"></button>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Encuesta No.</th>
+      <th>Imagen</th>
+      <th>Nombre</th>
+      <th>Grado academico</th>
+      <th>Sector</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-red>
+    <tr>
+      <td scope="row">{{ red.formulario.id }}</td>
+      <img class="img-table" src="{{ 'data:image/jpg;base64,' + red.formulario.foto.fotoBase64 }}" [alt]="red.formulario.nombre" width="100" class="p-shadow-4" />
+
+      <td>{{ red.formulario.nombre }}</td>
+      <td>{{ red.formulario.nivelEscolar }}</td>
+      <td>{{ red.formulario.sector }}</td>
+    </tr>
+    <!-- <tr>
+          <td>{{product.name}}</td>
+          <td><img [src]="'assets/showcase/images/demo/product/' + product.image" [alt]="product.name" width="100" class="p-shadow-4" /></td>
+          <td>{{product.price | currency:'USD'}}</td>
+          <td>{{product.category}}</td>
+          <td><p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating></td>
+          <td><span [class]="'product-badge status-' + product.inventoryStatus.toLowerCase()">{{product.inventoryStatus}}</span></td>
+      </tr> -->
+  </ng-template>
+  <ng-template pTemplate="summary">
+    <div class="p-d-flex p-ai-center p-jc-between">
+      <!-- In total there are {{products ? products.length : 0 }} products. -->
+    </div>
+  </ng-template>
+</p-table>
+<!--
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+--------------------------------MODAL----------------------------------
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+ -->
+<p-dialog [(visible)]="display" [style]="{ width: '35vw', height: '60vh' }">
+  <p-header class="modal-header">
+    Realizar un nuevo registro
+  </p-header>
+  <div [formGroup]="nuevoForm" class="p-col-12 p-md-4" [style]="{ width: 'inherit', height: '50vh' }">
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
+      <input
+        class="inp"
+        type="text"
+        pInputText
+        placeholder="Latitud"
+        readonly="true"
+        formControlName="latitud"
+        value="{{ latitud }}"
+        [style]="{ width: 'inherit', right: '3px' }"
+      />
+
+      <span class="p-inputgroup-addon"><i class="pi pi-map-marker"></i></span>
+      <input class="inp" type="text" pInputText placeholder="Longitud" readonly="true" formControlName="longitud" value="{{ longitud }}" [style]="{ width: 'inherit' }" />
+    </div>
+    <div class="p-col-12 p-md-4">
+      <div class="p-inputgroup">
+        <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+        <input class="inp" type="text" pInputText placeholder="Nombre" formControlName="nombre" [style]="{ width: 'inherit' }" />
+        <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+        <input class="inp" type="text" pInputText placeholder="Apellido" formControlName="apellido" [style]="{ width: 'inherit' }" />
+      </div>
+
+      <!-- [(ngModel)]="selectedGrado" [(ngModel)]="selectedCities" -->
+
+      <div class="p-col-12 p-md-4" [style]="{ width: 'inherit' }">
+        <p-multiSelect class="select" [options]="grados" formControlName="grado" [style]="{ width: '30vw' }">Grado academico</p-multiSelect>
+      </div>
+      <div class="p-col-12 p-md-4" [style]="{ width: 'inherit' }">
+        <p-multiSelect class="select" [options]="cities" formControlName="provincia" [style]="{ width: '30vw' }">Grado academico</p-multiSelect>
+      </div>
+      <div class="p-col-12 p-md-4" id="foto" [style]="{ width: 'inherit' }">
+        <!-- <input type="file" formControlName="foto"  (change)="onFileSelected($event)"  /> -->
+        <app-camera></app-camera>
+      </div>
+
+      <div class="p-col-12 p-md-4" [style]="{ width: 'inherit' }">
+        <p-button class="btn" label="Registrar" (click)="registro()"></p-button>
+      </div>
+    </div>
+  </div>
+</p-dialog>

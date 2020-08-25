@@ -1,0 +1,23 @@
+.actionBtn {
+  display: inline;
+  margin-right: 0.1em;
+  font-size: 2em;
+  cursor: pointer;
+  &:hover {
+    color: #2196F3;
+    font-size: 2.5em;
+  }
+  &:active {
+    font-size: 2.7em;
+  }
+}
+.snapshot{
+  text-align: center;
+  img{
+      max-width: 800px;
+      max-height: 800px;
+  }
+}
+ul.links{
+  padding-bottom: 20px;
+}
